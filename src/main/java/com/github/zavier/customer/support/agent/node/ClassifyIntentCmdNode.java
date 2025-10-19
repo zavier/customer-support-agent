@@ -24,12 +24,12 @@ public class ClassifyIntentCmdNode implements CommandAction<MessageAgentState> {
     private PromptTemplate promptTemplate = PromptTemplate.builder()
             .renderer(StTemplateRenderer.builder().startDelimiterToken('<').endDelimiterToken('>').build())
             .template("""
-                Analyze this customer message and classify it:
+                你是一个客户助手，现在需要分析客户的请求消息，对其进行分类：
 
-                Message: <messageContent>
-                From: <userName>
+                客户消息: <messageContent>
+                客户名称: <userName>
 
-                Provide classification including intent, urgency, topic, and summary.
+                提供分类信息，包括意图、紧急程度、主题 和总结
                 """)
             .build();
 

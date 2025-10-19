@@ -9,7 +9,6 @@ import org.bsc.langgraph4j.StateGraph;
 import org.bsc.langgraph4j.action.Command;
 import org.bsc.langgraph4j.action.CommandAction;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.template.st.StTemplateRenderer;
 import org.springframework.stereotype.Component;
@@ -23,27 +22,26 @@ public class DraftResponseCmdNode implements CommandAction<MessageAgentState> {
     private ChatClient chatClient;
 
     public DraftResponseCmdNode(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder
-                .defaultAdvisors(new SimpleLoggerAdvisor())
-                .build();
+        this.chatClient = chatClientBuilder.build();
     }
 
     private PromptTemplate promptTemplate = PromptTemplate.builder()
             .renderer(StTemplateRenderer.builder().startDelimiterToken('<').endDelimiterToken('>').build())
             .template("""
-                Draft a response to this customer:
+                你是一个专业的客服助手，现在需要为这个客户的请求生成一个回复:
                 <messageContent>
                 
-                Message intent: <intent>
-                Urgency level: <urgency>
-                
+                消息意图: <intent>
+                紧急程度: <urgency>
                 
                 <contextSelections>
                 
-                Guidelines:
-                - Be professional and helpful
-                - Address their specific concern
-                - Use the provide documentation when relevant
+                指导原则：
+                - 专业且乐于助人
+                - 解决他们的具体问题
+                - 必要时使用提供的文档
+                
+                **注意：只需要返回消息内容，不要回复其他无关部分**
                 
                 """)
             .build();
